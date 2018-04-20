@@ -1,17 +1,19 @@
 from __future__ import print_function
+from Adafruit_IO import *
 import time
 from dronekit import connect, VehicleMode, LocationGlobalRelative
 
+aio = Client('3d4f237c84c345268ad4186fdf6f8ce3')
 
-vehicle = connect('/dev/ttyS0', wait_ready=True)
+vehicle = connect('tcp:127.0.0.1:5762',baud=57600 ,wait_ready=True)
 
 
 def takeoff(aTargetAltitude):
     print("Basic pre-arm checks")
     # Don't try to arm until autopilot is ready
-    #while not vehicle.is_armable:
-    #    print(" Waiting for vehicle to initialise...")
-    #    time.sleep(1)
+    while not vehicle.is_armable:
+        print(" Waiting for vehicle to initialise...")
+        time.sleep(1)
 
     print("Arming motors")
     # Copter should arm in GUIDED mode
@@ -47,12 +49,15 @@ def land():
             		break
         	time.sleep(1)
 
-takeoff(2)
-print('Hovering')
-time.sleep(5)
-#point1= LocationGlobalRelative(-35.3621542,149.1650704,10)
-#vehicle.simple_goto(point1)
-#time.sleep(30)
-print('Landing Now')
-land()
-
+while vehicle.is_armable:
+	data = aio.receive('drone')
+	if data.value == "1":
+		takeoff(2)
+		print('Hovering')
+		time.sleep(5)
+		print('Landing Now')
+		land()
+		break
+	else:
+		print('{0}'.format(data.value))
+		time.sleep(1)
