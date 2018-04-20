@@ -11,7 +11,7 @@ import socket
 #Only works with GPSD server format not with NMEA standard format
 time.sleep(2)
 print('connecting to Vehicle')
-vehicle = connect('tcp:127.0.0.1:5760',wait_ready= True)
+vehicle = connect('/dev/ttyS0',baud= 57600 ,wait_ready= True)
 
 ####### FUNCTIONS #######
 
@@ -73,22 +73,28 @@ try:
                 print "User has changed flight modes - aborting follow-me"
                 break
             # Read the GPS state from the laptop
-            packet = gpsd.get_current()
-            lat = packet.lat
-            lon = packet.lon
+            try:
+	    	packet = gpsd.get_current()
+            	lat = packet.lat
+            	lon = packet.lon
 
             # Once we have a valid location (see gpsd documentation) we can start moving our vehicle around
-            if lat !=0 and lon != 0:
-                altitude = 5  # in meters
-                dest = LocationGlobalRelative(packet.lat, packet.lon, packet.alt)
-                print "Going to: %s" % dest
+            	if lat !=0 and lon != 0:
+
+
+		    altitude = 5  # in meters
+                    dest = LocationGlobalRelative(packet.lat, packet.lon, packet.alt)
+                    print "Going to: %s" % dest
 
                 # A better implementation would only send new waypoints if the position had changed significantly
-                vehicle.simple_goto(dest)
-
+                    vehicle.simple_goto(dest)
+                    time.sleep(2)
                 # Send a new target every two seconds
                 # For a complete implementation of follow me you'd want adjust this delay
-                time.sleep(2)
+
+	    except:
+	        land()
+                sys.exit(1)
 except socket.error:
     print "Error: gpsd service does not seem to be running, plug in USB GPS or run run-fake-gps.sh"
     sys.exit(1)
