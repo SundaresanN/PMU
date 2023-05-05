@@ -1,4 +1,4 @@
-S.No,uin,rpaCategory,rpaModel,operatorName,maxTakeoffWeight,uasType,isModel,issuedAt
+No,uin,rpaCategory,rpaModel,operatorName,maxTakeoffWeight,uasType,isModel,issuedAt
 1,UA005DWM1EX,MICRO,DJI AIR 2S,SHIMON FRANCIS,1,EX,YES,10-Feb-23
 2,UA006HDN0EX,NANO,DJI MINI2,MISHI REGHUNADH,0,EX,NO,27-Apr-23
 3,U100087,MICRO,PHANTOM 4 ADVANCED,PREET PATEL,2,EN,NO,27-Dec-21
